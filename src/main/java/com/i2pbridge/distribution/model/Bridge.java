@@ -1,9 +1,11 @@
 package com.i2pbridge.distribution.model;
 
 import lombok.Data;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 
 import javax.persistence.Id;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 public class Bridge {
@@ -18,8 +20,10 @@ public class Bridge {
 
     private String cert;
 
-    private Date addTime;
+    private Timestamp addTime;
 
-    private Integer status;
+    private String status;
+
+    private String country;
 
 }

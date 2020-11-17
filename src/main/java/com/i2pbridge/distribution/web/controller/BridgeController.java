@@ -6,6 +6,7 @@ import com.i2pbridge.distribution.service.BridgeService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,9 +28,9 @@ public class BridgeController {
 
     @CrossOrigin
     @GetMapping("list")
-    public R queryAllBridge(){
+    public R queryAllBridge(@Param("page") int page, @Param("limit") int limit, @Param("sort") String sort){
 
-        System.out.println("list");
+//        System.out.println(page + limit + sort);
         return service.queryAllBridge();
     }
 
