@@ -3,7 +3,7 @@ package com.i2pbridge.distribution.model;
 import lombok.Data;
 
 import javax.persistence.Id;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Data
 public class Distribution {
@@ -14,18 +14,6 @@ public class Distribution {
 
     private String ip;
 
-    private Date date;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getBridgeId() {
-        return bridgeId;
-    }
+    private Timestamp date;
 
 }

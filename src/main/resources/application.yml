@@ -9,3 +9,4 @@ spring:
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    jdbc-type-for-null: date

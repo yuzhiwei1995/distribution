@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +33,12 @@ public class BridgeController {
 
 //        System.out.println(page + limit + sort);
         return service.queryAllBridge();
+    }
+
+    @CrossOrigin
+    @GetMapping("getBridge")
+    public R queryOneBridge(HttpServletRequest request){
+        return service.queryOneBridge(request);
     }
 
 }
