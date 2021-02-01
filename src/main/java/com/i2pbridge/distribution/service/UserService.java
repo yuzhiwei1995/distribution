@@ -1,11 +1,14 @@
 package com.i2pbridge.distribution.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.i2pbridge.distribution.common.I2PEnum;
 import com.i2pbridge.distribution.common.I2PException;
 import com.i2pbridge.distribution.common.R;
 import com.i2pbridge.distribution.mapper.UserMapper;
+import com.i2pbridge.distribution.model.Certificate;
 import com.i2pbridge.distribution.model.User;
 import com.i2pbridge.distribution.utils.JwtUtils;
+import com.i2pbridge.distribution.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,11 @@ public class UserService {
 
     @Autowired
     private UserMapper mapper;
+
+    @Autowired
+    private CertificateService certService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public User getUserInfo(String username, String password) {
         User user = mapper.selectByUsername(username);
@@ -76,5 +84,51 @@ public class UserService {
 //        }
 //        else return R.error();
 
+    }
+
+    public User register() {
+        User user = new User();
+        user.setCredit(5L);
+        mapper.register(user);
+        return user;
+    }
+
+    public Boolean invitCodeValid(String code){
+        // 校验code是否存在
+        System.out.println(code);
+        User user = mapper.selectByInvitCode(code);
+        System.out.println(user);
+        return user != null;
+    }
+
+
+    public R invit(String code, HttpServletRequest request) {
+        if(!invitCodeValid(code)){
+            return R.error().message("邀请码不合法");
+        }
+        Certificate certificate = certService.generateCertificate(null, request);
+        Map map = new HashMap<>();
+        map.put("certificate", certificate);
+        return R.ok().data(map);
+    }
+
+    public R genInvitLink(Certificate certificate) {
+        // 查询用户是否存在邀请码
+        User user = certificate.getUser();
+        user = mapper.selectByPrimaryKey(user);
+        if(user.getInvitCode() != null && user.getInvitCode().length() == 10){
+            return R.ok().data("http://localhost:8080/user/invit?invit=" + user.getInvitCode());
+        }
+        // 生成邀请码
+        String invitCode = RandomUtil.getRandomString(10);
+
+        // 生成邀请链接 TODO 上线待修改
+        String invitLink = "http://localhost:8080/user/invit?invit=" + invitCode;
+
+        // 保存邀请码
+        user.setInvitCode(invitCode);
+        mapper.updateByPrimaryKey(user);
+
+        return R.ok().data(invitLink);
     }
 }

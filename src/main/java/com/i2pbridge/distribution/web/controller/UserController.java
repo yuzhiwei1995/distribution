@@ -1,9 +1,11 @@
 package com.i2pbridge.distribution.web.controller;
 
 import com.i2pbridge.distribution.common.R;
+import com.i2pbridge.distribution.model.Certificate;
 import com.i2pbridge.distribution.model.User;
 import com.i2pbridge.distribution.service.UserService;
 import io.swagger.annotations.Api;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +40,17 @@ public class UserController {
     @PostMapping("logout")
     public R logout(HttpServletRequest request, HttpServletResponse response){
         return service.logout(request,response);
+    }
+
+    @CrossOrigin
+    @GetMapping("invit")
+    public R register(@RequestParam("invit") String code, HttpServletRequest request){
+        return service.invit(code, request);
+    }
+
+    @CrossOrigin
+    @PostMapping("genInvitLink")
+    public R genInvitLink(@RequestBody Certificate certificate){
+        return service.genInvitLink(certificate);
     }
 }
