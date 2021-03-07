@@ -18,4 +18,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select * from user where invit_code = #{code}")
     User selectByInvitCode(@Param("code") String code);
+
+    @Select("select avg(credit) from user")
+    double getCreditAvg();
 }

@@ -22,10 +22,8 @@ public class User {
     @JsonIgnore
     private String avatar;
 
-    @JsonIgnore
     private String username;
 
-    @JsonIgnore
     private String password;
 
     @JsonProperty("credit")
@@ -33,4 +31,21 @@ public class User {
 
     @JsonIgnore
     private String invitCode;
+
+    @JsonIgnore
+    public String getUsername() {
+        return username;
+    }
+    @JsonProperty
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

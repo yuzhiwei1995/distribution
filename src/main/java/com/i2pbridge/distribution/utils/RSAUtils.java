@@ -10,6 +10,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.i2pbridge.distribution.utils.RSATool.MdigestSHA;
 
@@ -93,7 +94,7 @@ public class RSAUtils {
         Signature sig = Signature.getInstance("SHA1withRSA");
         sig.initSign(privKey);
 //        sig.update(str.getBytes(StandardCharsets.UTF_8));
-        sig.update(MdigestSHA(str));
+        sig.update(Objects.requireNonNull(MdigestSHA(str)));
         return Base64.encodeBase64String(sig.sign());
 
     }
@@ -118,7 +119,7 @@ public class RSAUtils {
         PublicKey pubKey = mykeyFactory.generatePublic(pub_spec);
         sig.initVerify(pubKey);
 //        sig.update(Base64.decodeBase64(source));
-        sig.update(MdigestSHA(source));
+        sig.update(Objects.requireNonNull(MdigestSHA(source)));
         return sig.verify(inputByte);
     }
 

@@ -55,5 +55,18 @@ public class BridgeController {
                 certificate.getBridgeId(), certificate.getVote());
     }
 
+    // TODO 将跨域CrossOrigin去掉
+    @CrossOrigin
+    @GetMapping("calc")
+    public R bridgeCreidtCalc(){
+        return service.updateBridgeCredit();
+    }
 
+    @CrossOrigin
+    @PostMapping("upload")
+    public R uploadBridgeline(@RequestParam("bridgeline") String bridgeline,
+                              @RequestParam("cert") String certificate,
+                              HttpServletRequest request){
+        return service.uploadBridge(bridgeline, certificate, request);
+    }
 }

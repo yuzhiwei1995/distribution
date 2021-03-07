@@ -35,4 +35,6 @@ public class Bridge {
 
     private Timestamp expireTime;
 
+    private Integer rank;
+
 }

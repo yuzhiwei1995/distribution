@@ -117,18 +117,32 @@ public class UserService {
         User user = certificate.getUser();
         user = mapper.selectByPrimaryKey(user);
         if(user.getInvitCode() != null && user.getInvitCode().length() == 10){
-            return R.ok().data("http://localhost:8080/user/invit?invit=" + user.getInvitCode());
+//            return R.ok().data("http://localhost:8080/user/invit?invit=" + user.getInvitCode());
+            return R.ok().data("http://i2pbridge.cn/bridge.html?invit=" + user.getInvitCode());
         }
         // 生成邀请码
         String invitCode = RandomUtil.getRandomString(10);
 
-        // 生成邀请链接 TODO 上线待修改
-        String invitLink = "http://localhost:8080/user/invit?invit=" + invitCode;
+        // 生成邀请链接
+//        String invitLink = "http://localhost:8080/user/invit?invit=" + invitCode;
+        String invitLink = "http://i2pbridge.cn/bridge.html?invit=" + invitCode;
 
         // 保存邀请码
         user.setInvitCode(invitCode);
         mapper.updateByPrimaryKey(user);
 
         return R.ok().data(invitLink);
+    }
+
+    public double getCreditAvg(){
+        return mapper.getCreditAvg();
+    }
+
+    public int insertByUser(User user){
+        return mapper.updateByPrimaryKey(user);
+    }
+
+    public User getUserByID(User user){
+        return mapper.selectByPrimaryKey(user);
     }
 }

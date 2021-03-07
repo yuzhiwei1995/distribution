@@ -33,6 +33,9 @@ public class CertificateService {
     @Autowired
     private DistributionMapper distMapper;
 
+    @Autowired
+    private CertificateMapper certMapper;
+
     ObjectMapper mapper = new ObjectMapper();
 
     public R vertify(Certificate certificate) {
@@ -46,32 +49,39 @@ public class CertificateService {
         // 证书为空表示新用户
         if(certificate == null) {
             User user = userService.register();
+            user.setCredit(5L);
 //            System.out.println(user.getId());
             certificate = new Certificate();
             certificate.setUser(user);
         }
         // 获取网桥，并扣除积分
         Bridge bridge = bridgeService.getBridge(certificate);
+        User user = userService.getUserByID(certificate.getUser());
+        user.setCredit(certificate.getUser().getCredit());
+        userService.insertByUser(user);
 
-        // 分发
-        Distribution d = new Distribution();
-        d.setDate(new Timestamp(System.currentTimeMillis()));
-        d.setBridgeId(bridge.getId());
-        d.setUserId(certificate.getUser().getId());
-        d.setIp(IPUtils.getIpAddr(request));
-        distMapper.insert(d);
-        d.setBridgeline(bridgeService.getBridgeline(bridge));
+        if(bridge != null) {
+            // 分发
+            Distribution d = new Distribution();
+            d.setDate(new Timestamp(System.currentTimeMillis()));
+            d.setBridgeId(bridge.getId());
+            d.setUserId(certificate.getUser().getId());
+            d.setIp(IPUtils.getIpAddr(request));
+            distMapper.insert(d);
+            d.setBridgeline(bridgeService.getBridgeline(bridge));
 
-        ArrayList<Distribution> bridgelist = new ArrayList<>();
-        bridgelist.add(d);
+            ArrayList<Distribution> bridgelist = new ArrayList<>();
+            bridgelist.add(d);
 
-        certificate.setBridgelist(bridgelist);
+            certificate.setBridgelist(bridgelist);
 
-        certificate.setId(null);
+            certificate.setId(null);
 
-        certificate.setBuildTime(new Timestamp(System.currentTimeMillis()));
+            certificate.setBuildTime(new Timestamp(System.currentTimeMillis()));
 
-        certificate.setIsValid(true);
+            certificate.setIsValid(true);
+        }
+
         // 签名
         try {
             String certId = RSAUtils.sign(mapper.writeValueAsString(certificate));
@@ -97,6 +107,7 @@ public class CertificateService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        certMapper.selectByExample()
         return false;
     }
 }
